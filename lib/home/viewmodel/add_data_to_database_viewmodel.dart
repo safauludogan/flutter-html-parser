@@ -1,12 +1,52 @@
 import 'package:flutter/material.dart';
 
-import 'add_data_to_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 
-import 'model/body_building_model.dart';
+import '../../core/base/viewmodel/base_view_model.dart';
+import '../../core/constants/duration_items.dart';
+import '../../core/constants/enums/network_connectivity_enums.dart';
+import '../../core/network/connectivity/network_connectivity.dart';
+import '../../core/network/connectivity/network_connectivity_interface.dart';
+import '../../core/theme/custom_theme_data.dart';
+import '../model/body_building_model.dart';
+import 'package:mobx/mobx.dart';
 
-abstract class AddDataToDatabaseViewModel extends State<AddDataToDatabase> {
+part 'add_data_to_database_viewmodel.g.dart';
+
+class AddDataToDatabaseViewModel = _AddDataToDatabaseViewModelBase
+    with _$AddDataToDatabaseViewModel;
+
+abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
+  @override
+  void setContext(BuildContext context) => baseContext = context;
+  @override
+  void init(TickerProvider? tickerProvider) {
+    controller = AnimationController(
+        vsync: tickerProvider!, duration: DurationItems.durationLow());
+    controller.animateTo(0.5);
+    networkConnectivity = NetworkConnectivity();
+    checkFirstTimeInternetConnection();
+  }
+
+  bool isLight = true;
+  var themeStore = ThemeStore.instance;
+  late AnimationController controller;
+  late TickerProvider tickerProvider;
+  late NetworkConnectivityInterface networkConnectivity;
+
+  @observable
+  List<BodyBuildingModel> bodyBuildingModel = [];
+  @observable
+  NetworkConnectivityEnums? networkConnectivityEnums;
+
+  changeTheme() {
+    themeStore.changeTheme(isLight ? ThemeType.dark : ThemeType.light);
+    controller.animateTo(isLight ? 1 : 0.5);
+    isLight = !isLight;
+  }
+
+  @action
   getAllExerciseLinks() async {
     Uri url =
         Uri.parse('https://www.muscleandstrength.com/exercises/adductors.html');
@@ -23,16 +63,15 @@ abstract class AddDataToDatabaseViewModel extends State<AddDataToDatabase> {
     }
   }
 
+  @action
   getDataFromUrl(String link) async {
     List<Object> newList = [];
     List<Object> newHeaderList = [];
-    List<BodyBuildingModel> bodyBuildingModel = [];
+
     String muscleAnatomyImage;
     String? exerciseName;
     //TargetUrl
-    Uri url = Uri.parse(
-        //"/exercises/cable-crunch.html");
-        "https://www.muscleandstrength.com/$link");
+    Uri url = Uri.parse("https://www.muscleandstrength.com/$link");
 
     var document = parse((await http.Client().get(url)).body);
     var headerLength = document
@@ -57,10 +96,6 @@ abstract class AddDataToDatabaseViewModel extends State<AddDataToDatabase> {
       newList
           .add(indexElement.replaceAll(newHeaderList[i].toString(), '').trim());
     }
-
-    /*
-    System.out.println("Video : "+doc.select("div.video-wrap > iframe").attr("src"));
-    */
 
     //Title
     for (int i = 0; i < document.getElementsByTagName('meta').length; i++) {
@@ -97,5 +132,12 @@ abstract class AddDataToDatabaseViewModel extends State<AddDataToDatabase> {
           element: newList[6].toString().split(',').toString())),
     ));
     debugPrint(bodyBuildingModel.toString());
+  }
+
+  @action
+  Future<void> checkFirstTimeInternetConnection() async {
+    networkConnectivityEnums =
+        await networkConnectivity.checkNetworkConnectivity();
+    debugPrint(networkConnectivityEnums.toString());
   }
 }
