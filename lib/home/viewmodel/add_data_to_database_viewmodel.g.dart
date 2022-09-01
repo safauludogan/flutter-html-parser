@@ -49,7 +49,7 @@ mixin _$AddDataToDatabaseViewModel on _AddDataToDatabaseViewModelBase, Store {
       context: context);
 
   @override
-  Future getAllExerciseLinks() {
+  Future<List<BodyBuildingModel>> getAllExerciseLinks() {
     return _$getAllExerciseLinksAsyncAction
         .run(() => super.getAllExerciseLinks());
   }

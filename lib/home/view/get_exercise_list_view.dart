@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html_parser/core/constants/enums/network_connectivity_enums.dart';
+import 'package:flutter_html_parser/core/constants/height_weight.dart';
 import 'package:flutter_html_parser/core/widgets/lottie_widget.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import '../../core/base/view/base_view.dart';
@@ -37,9 +38,35 @@ class _AddDataToDatabaseState extends State<AddDataToDatabase>
         body: Observer(
             builder: (context) => viewModel.networkConnectivityEnums ==
                     NetworkConnectivityEnums.off
-                ? const Text('internet Yok')
-                : const Text('internet  Var')),
+                ? Center(
+                    child: LottiePaths.lottie_no_internet_connection.toWidget(
+                        height: dynamicHeight(value: 0.3, context: context)),
+                  )
+                : FutureBuilder(
+                    future: viewModel.future,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<dynamic> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        if (snapshot.hasError) {
+                          return const Text('Datalar indirilemedi');
+                        } else if (snapshot.hasData) {
+                          return ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Text(snapshot.data[index].exerciseName.toString());
+                            },
+                          );
+                        }else{
+                           return const Text('Data yok');
+                        }
+                      }
+                      return Text(snapshot.data.toString());
+                    })),
       );
+
 
   AppBar get appBar {
     return AppBar(

@@ -20,15 +20,19 @@ class AddDataToDatabaseViewModel = _AddDataToDatabaseViewModelBase
 abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
   @override
   void setContext(BuildContext context) => baseContext = context;
+
+  late Future<List<BodyBuildingModel>> future;
+
   @override
   void init(TickerProvider? tickerProvider) {
+    checkFirstTimeInternetConnection();
     controller = AnimationController(
         vsync: tickerProvider!, duration: DurationItems.durationLow());
     controller.animateTo(0.5);
-    networkConnectivity = NetworkConnectivity();
-    checkFirstTimeInternetConnection();
+    future = getAllExerciseLinks();
   }
 
+  bool isInternetState = false;
   bool isLight = true;
   var themeStore = ThemeStore.instance;
   late AnimationController controller;
@@ -47,20 +51,22 @@ abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
   }
 
   @action
-  getAllExerciseLinks() async {
-    Uri url =
-        Uri.parse('https://www.muscleandstrength.com/exercises/adductors.html');
+  Future<List<BodyBuildingModel>> getAllExerciseLinks() async {
+    bodyBuildingModel.clear();
+    debugPrint('ÇAĞIRILDI');
+    Uri url = Uri.parse('https://www.muscleandstrength.com/exercises/biceps');
     var document = parse((await http.Client().get(url)).body);
 
     for (int i = 0;
         i < document.getElementsByClassName('node-title').length;
         i++) {
-      getDataFromUrl(document
+      await getDataFromUrl(document
           .getElementsByClassName('node-title')[i]
           .getElementsByTagName('a')[0]
           .attributes['href']
           .toString());
     }
+    return bodyBuildingModel;
   }
 
   @action
@@ -131,13 +137,14 @@ abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
       secondaryMuscles: (SecondaryMuscles(
           element: newList[6].toString().split(',').toString())),
     ));
-    debugPrint(bodyBuildingModel.toString());
   }
 
   @action
   Future<void> checkFirstTimeInternetConnection() async {
+    isInternetState = false;
+    networkConnectivity = NetworkConnectivity();
     networkConnectivityEnums =
         await networkConnectivity.checkNetworkConnectivity();
-    debugPrint(networkConnectivityEnums.toString());
+    isInternetState = true;
   }
 }
