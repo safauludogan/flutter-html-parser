@@ -26,24 +26,6 @@ mixin _$AddDataToDatabaseViewModel on _AddDataToDatabaseViewModelBase, Store {
     });
   }
 
-  late final _$networkConnectivityEnumsAtom = Atom(
-      name: '_AddDataToDatabaseViewModelBase.networkConnectivityEnums',
-      context: context);
-
-  @override
-  NetworkConnectivityEnums? get networkConnectivityEnums {
-    _$networkConnectivityEnumsAtom.reportRead();
-    return super.networkConnectivityEnums;
-  }
-
-  @override
-  set networkConnectivityEnums(NetworkConnectivityEnums? value) {
-    _$networkConnectivityEnumsAtom
-        .reportWrite(value, super.networkConnectivityEnums, () {
-      super.networkConnectivityEnums = value;
-    });
-  }
-
   late final _$getAllExerciseLinksAsyncAction = AsyncAction(
       '_AddDataToDatabaseViewModelBase.getAllExerciseLinks',
       context: context);
@@ -63,21 +45,10 @@ mixin _$AddDataToDatabaseViewModel on _AddDataToDatabaseViewModelBase, Store {
     return _$getDataFromUrlAsyncAction.run(() => super.getDataFromUrl(link));
   }
 
-  late final _$checkFirstTimeInternetConnectionAsyncAction = AsyncAction(
-      '_AddDataToDatabaseViewModelBase.checkFirstTimeInternetConnection',
-      context: context);
-
-  @override
-  Future<void> checkFirstTimeInternetConnection() {
-    return _$checkFirstTimeInternetConnectionAsyncAction
-        .run(() => super.checkFirstTimeInternetConnection());
-  }
-
   @override
   String toString() {
     return '''
-bodyBuildingModel: ${bodyBuildingModel},
-networkConnectivityEnums: ${networkConnectivityEnums}
+bodyBuildingModel: ${bodyBuildingModel}
     ''';
   }
 }

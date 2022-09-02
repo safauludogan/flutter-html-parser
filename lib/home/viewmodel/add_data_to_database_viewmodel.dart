@@ -5,9 +5,6 @@ import 'package:html/parser.dart' show parse;
 
 import '../../core/base/viewmodel/base_view_model.dart';
 import '../../core/constants/duration_items.dart';
-import '../../core/constants/enums/network_connectivity_enums.dart';
-import '../../core/network/connectivity/network_connectivity.dart';
-import '../../core/network/connectivity/network_connectivity_interface.dart';
 import '../../core/theme/custom_theme_data.dart';
 import '../model/body_building_model.dart';
 import 'package:mobx/mobx.dart';
@@ -25,7 +22,6 @@ abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
 
   @override
   void init(TickerProvider? tickerProvider) {
-    checkFirstTimeInternetConnection();
     controller = AnimationController(
         vsync: tickerProvider!, duration: DurationItems.durationLow());
     controller.animateTo(0.5);
@@ -37,12 +33,9 @@ abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
   var themeStore = ThemeStore.instance;
   late AnimationController controller;
   late TickerProvider tickerProvider;
-  late NetworkConnectivityInterface networkConnectivity;
 
   @observable
   List<BodyBuildingModel> bodyBuildingModel = [];
-  @observable
-  NetworkConnectivityEnums? networkConnectivityEnums;
 
   changeTheme() {
     themeStore.changeTheme(isLight ? ThemeType.dark : ThemeType.light);
@@ -137,14 +130,5 @@ abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
       secondaryMuscles: (SecondaryMuscles(
           element: newList[6].toString().split(',').toString())),
     ));
-  }
-
-  @action
-  Future<void> checkFirstTimeInternetConnection() async {
-    isInternetState = false;
-    networkConnectivity = NetworkConnectivity();
-    networkConnectivityEnums =
-        await networkConnectivity.checkNetworkConnectivity();
-    isInternetState = true;
   }
 }

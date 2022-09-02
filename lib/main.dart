@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return Observer(
       builder: (context) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: ProejctItems.PROJECT_NAME,
+        title: ProjectItems.PROJECT_NAME,
         theme: ThemeStore.instance.getThemeData,
         home: const Scaffold(
           body: AddDataToDatabase(),
