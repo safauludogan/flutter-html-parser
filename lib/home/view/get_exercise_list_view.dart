@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html_parser/core/constants/height_weight.dart';
 import 'package:flutter_html_parser/core/utils/context_extension.dart';
 import 'package:flutter_html_parser/core/widgets/lottie_widget.dart';
 import 'package:flutter_html_parser/home/model/body_building_model.dart';
 import '../../core/base/view/base_view.dart';
+import '../../core/constants/padding_items.dart';
 import '../../core/constants/project_items.dart';
 import '../../core/widgets/no_internet_connection.dart';
 import '../viewmodel/add_data_to_database_viewmodel.dart';
@@ -37,7 +39,10 @@ class _AddDataToDatabaseState extends State<AddDataToDatabase>
     return Scaffold(
         floatingActionButton: floatingActionButtonChangeTheme,
         appBar: appBar,
-        body: body);
+        body: Padding(
+          padding: PaddingItems.paddingScaffold,
+          child: body,
+        ));
   }
 
   FutureBuilder<List<BodyBuildingModel>> bodyWidget() {
@@ -48,24 +53,107 @@ class _AddDataToDatabaseState extends State<AddDataToDatabase>
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
-              return Center(
-                  child: Text(ProjectItems.dataIsNotDownload,
-                      style: context.textTheme.bodySmall));
+              return _dataIsNotDownloadText(context);
             } else if (snapshot.hasData) {
               return ListView.builder(
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data.length + 1,
                 itemBuilder: (context, index) {
-                  return Text(snapshot.data[index].exerciseName.toString());
+                  if (index != snapshot.data.length) {
+                    var indexItem = snapshot.data[index];
+                    return Padding(
+                      padding: PaddingItems.paddingBottomLow,
+                      child: _customCard(indexItem, context),
+                    );
+                  } else {
+                    return SizedBox(
+                      height: dynamicHeight(value: 0.1, context: context),
+                    );
+                  }
                 },
               );
             } else {
-              return Center(
-                  child: Text(ProjectItems.noData,
-                      style: context.textTheme.bodySmall));
+              return _noDataText(context);
             }
           }
           return Text(snapshot.data.toString());
         });
+  }
+
+  Card _customCard(indexItem, BuildContext context) {
+    return Card(
+        elevation: 10,
+        child: Padding(
+          padding: PaddingItems.paddingAllLow,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _basicText(indexItem, context, ProjectItems.exercise,
+                        indexItem.exerciseName.toString(),
+                        style: context.textTheme.headline6),
+                    SizedBox(
+                        height: dynamicHeight(value: 0.02, context: context)),
+                    _basicText(indexItem, context, ProjectItems.targetMuscle,
+                        indexItem.targetMuscleGroup.toString()),
+                    SizedBox(
+                        height: dynamicHeight(value: 0.01, context: context)),
+                    _basicText(indexItem, context, ProjectItems.exerciseType,
+                        indexItem.exerciseType.toString()),
+                    SizedBox(
+                        height: dynamicHeight(value: 0.01, context: context)),
+                    _basicText(indexItem, context, ProjectItems.equipment,
+                        indexItem.equipmentRequired.toString()),
+                    SizedBox(
+                        height: dynamicHeight(value: 0.01, context: context)),
+                    _basicText(indexItem, context, ProjectItems.mechanic,
+                        indexItem.mechanics.toString()),
+                    SizedBox(
+                        height: dynamicHeight(value: 0.01, context: context)),
+                    _basicText(indexItem, context, ProjectItems.force,
+                        indexItem.forceType.toString()),
+                    SizedBox(
+                        height: dynamicHeight(value: 0.01, context: context)),
+                    _basicText(indexItem, context, ProjectItems.experienceLevel,
+                        indexItem.experienceLevel.toString()),
+                    SizedBox(
+                        height: dynamicHeight(value: 0.01, context: context)),
+                    _basicText(
+                        indexItem,
+                        context,
+                        ProjectItems.secondaryMuscles,
+                        indexItem.secondaryMuscles.toString()),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Image.network(indexItem.muscleAnatomyImage),
+              )
+            ],
+          ),
+        ));
+  }
+
+  Text _basicText(indexItem, BuildContext context, header, indextText,
+      {TextStyle? style}) {
+    return Text(
+      '$header : $indextText',
+      style: style,
+    );
+  }
+
+  Widget _noDataText(BuildContext context) {
+    return Center(
+        child: Text(ProjectItems.noData, style: context.textTheme.bodySmall));
+  }
+
+  Widget _dataIsNotDownloadText(BuildContext context) {
+    return Center(
+        child: Text(ProjectItems.dataIsNotDownload,
+            style: context.textTheme.bodySmall));
   }
 
   AppBar get appBar {

@@ -46,7 +46,6 @@ abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
   @action
   Future<List<BodyBuildingModel>> getAllExerciseLinks() async {
     bodyBuildingModel.clear();
-    debugPrint('ÇAĞIRILDI');
     Uri url = Uri.parse('https://www.muscleandstrength.com/exercises/biceps');
     var document = parse((await http.Client().get(url)).body);
 
