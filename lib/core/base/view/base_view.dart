@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html_parser/core/constants/project_items.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
-import '../../utils/context_extension.dart';
 
 import '../../constants/enums/network_connectivity_enums.dart';
-import '../../constants/height_weight.dart';
-
-import '../../widgets/lottie_widget.dart';
 import '../viewmodel/internet_control_viewmodel/viewmodel.dart';
 
 class BaseView<T extends Store> extends StatefulWidget {

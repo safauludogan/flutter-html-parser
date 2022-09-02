@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html_parser/core/utils/context_extension.dart';
 import 'package:flutter_html_parser/core/widgets/lottie_widget.dart';
 import 'package:flutter_html_parser/home/model/body_building_model.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import '../../core/base/view/base_view.dart';
-import '../../core/constants/height_weight.dart';
 import '../../core/constants/project_items.dart';
+import '../../core/widgets/no_internet_connection.dart';
 import '../viewmodel/add_data_to_database_viewmodel.dart';
 
 class AddDataToDatabase extends StatefulWidget {
@@ -30,26 +29,15 @@ class _AddDataToDatabaseState extends State<AddDataToDatabase>
         onPageBuilder: (context, viewModel, isInternet) {
           return isInternet == true
               ? homeBody(bodyWidget())
-              : homeBody(noInternet(context));
+              : homeBody(const NoInternetConnection());
         });
   }
 
   Widget homeBody(Widget body) {
-    return Scaffold(appBar: appBar, body: body);
-  }
-
-  Column noInternet(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Center(
-          child: LottiePaths.lottie_no_internet_connection
-              .toWidget(height: dynamicHeight(value: 0.3, context: context)),
-        ),
-        Text(ProjectItems.no_internet_connection,
-            style: context.textTheme.headline6!.copyWith(color: Colors.red)),
-      ],
-    );
+    return Scaffold(
+        floatingActionButton: floatingActionButtonChangeTheme,
+        appBar: appBar,
+        body: body);
   }
 
   FutureBuilder<List<BodyBuildingModel>> bodyWidget() {
@@ -60,7 +48,9 @@ class _AddDataToDatabaseState extends State<AddDataToDatabase>
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
-              return const Text('Datalar indirilemedi');
+              return Center(
+                  child: Text(ProjectItems.dataIsNotDownload,
+                      style: context.textTheme.bodySmall));
             } else if (snapshot.hasData) {
               return ListView.builder(
                 itemCount: snapshot.data.length,
@@ -69,7 +59,9 @@ class _AddDataToDatabaseState extends State<AddDataToDatabase>
                 },
               );
             } else {
-              return const Text('Data yok');
+              return Center(
+                  child: Text(ProjectItems.noData,
+                      style: context.textTheme.bodySmall));
             }
           }
           return Text(snapshot.data.toString());
