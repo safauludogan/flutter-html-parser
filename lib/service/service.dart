@@ -1,58 +1,95 @@
-import 'package:flutter/material.dart';
-
+import 'package:flutter_html_parser/feature/home/model/body_building_model.dart';
+import 'package:flutter_html_parser/service/i_service.dart';
+import 'package:flutter_html_parser/service/project_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 
-import '../../core/base/viewmodel/base_view_model.dart';
-import '../../core/constants/duration_items.dart';
-import '../../core/theme/custom_theme_data.dart';
-import '../model/body_building_model.dart';
-import 'package:mobx/mobx.dart';
+enum ApiQuery { exercises }
 
-part 'add_data_to_database_viewmodel.g.dart';
+enum ApiPath {
+  abductors,
+  abs,
+  adductors,
+  biceps,
+  calves,
+  chest,
+  forearms,
+  glutes,
+  hamstrings,
+  hipFlexors,
+  itBand,
+  lats,
+  lowerBack,
+  middleBack,
+  neck,
+  obliques,
+  palmarFascia,
+  plantarFascia,
+  quads,
+  shoulders
+}
 
-class AddDataToDatabaseViewModel = _AddDataToDatabaseViewModelBase
-    with _$AddDataToDatabaseViewModel;
-
-abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
-  @override
-  void setContext(BuildContext context) => baseContext = context;
-
-  late Future<List<BodyBuildingModel>> future;
-
-  @override
-  void init(TickerProvider? tickerProvider) {
-    controller = AnimationController(
-        vsync: tickerProvider!, duration: DurationItems.durationLow());
-    controller.animateTo(0.5);
-    future = getAllExerciseLinks();
+extension ExtensionApiQuery on ApiPath {
+  String _path() {
+    switch (this) {
+      case ApiPath.abductors:
+        return '$name.html';
+      case ApiPath.abs:
+        return name;
+      case ApiPath.adductors:
+        return '$name.html';
+      case ApiPath.biceps:
+        return name;
+      case ApiPath.calves:
+        return name;
+      case ApiPath.chest:
+        return name;
+      case ApiPath.forearms:
+        return name;
+      case ApiPath.glutes:
+        return name;
+      case ApiPath.hamstrings:
+        return name;
+      case ApiPath.hipFlexors:
+        return 'hip-flexors';
+      case ApiPath.itBand:
+        return 'it-band';
+      case ApiPath.lowerBack:
+        return 'lower-back';
+      case ApiPath.middleBack:
+        return 'middle_back';
+      case ApiPath.neck:
+        return '$name.html';
+      case ApiPath.obliques:
+        return name;
+      case ApiPath.palmarFascia:
+        return 'palmar-fascia';
+      case ApiPath.plantarFascia:
+        return 'plantar-fascia';
+      case ApiPath.quads:
+        return name;
+      default:
+        return ApiQuery.exercises.name;
+    }
   }
 
-  bool isInternetState = false;
-  bool isLight = true;
-  var themeStore = ThemeStore.instance;
-  late AnimationController controller;
-  late TickerProvider tickerProvider;
+  String get queryPath => _path();
+}
 
-  @observable
+class Service extends IService {
   List<BodyBuildingModel> bodyBuildingModel = [];
 
-  changeTheme() {
-    themeStore.changeTheme(isLight ? ThemeType.dark : ThemeType.light);
-    controller.animateTo(isLight ? 1 : 0.5);
-    isLight = !isLight;
-  }
-
-  @action
-  Future<List<BodyBuildingModel>> getAllExerciseLinks() async {
+  @override
+  Future<List<BodyBuildingModel>> fetchData() async {
     bodyBuildingModel.clear();
-    Uri url = Uri.parse('https://www.muscleandstrength.com/exercises/biceps');
+    Uri url = Uri.parse(
+        '${ProjectManager.baseUrl}/${ApiQuery.exercises.name}/${ApiPath.biceps.queryPath}');
     var document = parse((await http.Client().get(url)).body);
 
     for (int i = 0;
         i < document.getElementsByClassName('node-title').length;
         i++) {
-      await getDataFromUrl(document
+      await _getDataFromUrl(document
           .getElementsByClassName('node-title')[i]
           .getElementsByTagName('a')[0]
           .attributes['href']
@@ -61,15 +98,14 @@ abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
     return bodyBuildingModel;
   }
 
-  @action
-  getDataFromUrl(String link) async {
+  _getDataFromUrl(String link) async {
     List<Object> newList = [];
     List<Object> newHeaderList = [];
 
     String muscleAnatomyImage;
     String? exerciseName;
     //TargetUrl
-    Uri url = Uri.parse("https://www.muscleandstrength.com/$link");
+    Uri url = Uri.parse("${ProjectManager.baseUrl}/$link");
 
     var document = parse((await http.Client().get(url)).body);
     var headerLength = document

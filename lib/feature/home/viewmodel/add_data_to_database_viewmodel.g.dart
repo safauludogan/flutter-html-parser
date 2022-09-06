@@ -9,6 +9,38 @@ part of 'add_data_to_database_viewmodel.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AddDataToDatabaseViewModel on _AddDataToDatabaseViewModelBase, Store {
+  late final _$futureAtom =
+      Atom(name: '_AddDataToDatabaseViewModelBase.future', context: context);
+
+  @override
+  Future<List<BodyBuildingModel>>? get future {
+    _$futureAtom.reportRead();
+    return super.future;
+  }
+
+  @override
+  set future(Future<List<BodyBuildingModel>>? value) {
+    _$futureAtom.reportWrite(value, super.future, () {
+      super.future = value;
+    });
+  }
+
+  late final _$isDataGettingAtom = Atom(
+      name: '_AddDataToDatabaseViewModelBase.isDataGetting', context: context);
+
+  @override
+  bool get isDataGetting {
+    _$isDataGettingAtom.reportRead();
+    return super.isDataGetting;
+  }
+
+  @override
+  set isDataGetting(bool value) {
+    _$isDataGettingAtom.reportWrite(value, super.isDataGetting, () {
+      super.isDataGetting = value;
+    });
+  }
+
   late final _$bodyBuildingModelAtom = Atom(
       name: '_AddDataToDatabaseViewModelBase.bodyBuildingModel',
       context: context);
@@ -36,18 +68,11 @@ mixin _$AddDataToDatabaseViewModel on _AddDataToDatabaseViewModelBase, Store {
         .run(() => super.getAllExerciseLinks());
   }
 
-  late final _$getDataFromUrlAsyncAction = AsyncAction(
-      '_AddDataToDatabaseViewModelBase.getDataFromUrl',
-      context: context);
-
-  @override
-  Future getDataFromUrl(String link) {
-    return _$getDataFromUrlAsyncAction.run(() => super.getDataFromUrl(link));
-  }
-
   @override
   String toString() {
     return '''
+future: ${future},
+isDataGetting: ${isDataGetting},
 bodyBuildingModel: ${bodyBuildingModel}
     ''';
   }

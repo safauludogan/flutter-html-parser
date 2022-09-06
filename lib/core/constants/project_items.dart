@@ -7,7 +7,7 @@ class ProjectItems {
 
   //TODO: ANASAYFA
   static const String home = 'Anasayfa';
-  static const String dataIsNotDownload = 'Dosyalar indirilemedi';
+  static const String dataNotGetYet = 'Veri çekmek için indirme butonuna tıklayınız';
   static const String noData = 'Veri yok';
   static const String exercise = 'Egzersiz';
   static const String targetMuscle = 'Hedef kas';

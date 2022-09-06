@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html_parser/home/view/get_exercise_list_view.dart';
 import 'package:flutter_html_parser/core/constants/project_items.dart';
+import 'package:flutter_html_parser/core/utils/context_extension.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'core/theme/custom_theme_data.dart';
+import 'feature/home/view/get_exercise_list_view.dart';
 
 void main() => runApp(const MyApp());
 
@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
       builder: (context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: ProjectItems.PROJECT_NAME,
-        theme: ThemeStore.instance.getThemeData,
+        theme: context.theme,
         home: const Scaffold(
-          body: AddDataToDatabase(),
+          body: ExerciseListView(),
         ),
       ),
     );
