@@ -46,8 +46,12 @@ abstract class _AddDataToDatabaseViewModelBase with Store, BaseViewModel {
   @action
   Future<List<BodyBuildingModel>> getAllExerciseLinks() async {
     isDataGetting = true;
-    bodyBuildingModel = await Service().fetchData();
-    isDataGetting = false;
+    try {
+      bodyBuildingModel = await Service().fetchData();
+    } finally {
+      isDataGetting = false;
+    }
+
     return bodyBuildingModel;
   }
 }
