@@ -57,7 +57,7 @@ extension ExtensionApiQuery on ApiPath {
       case ApiPath.lowerBack:
         return 'lower-back';
       case ApiPath.middleBack:
-        return 'middle_back';
+        return 'middle-back';
       case ApiPath.neck:
         return '$name.html';
       case ApiPath.obliques:
@@ -83,7 +83,7 @@ class Service extends IService {
   Future<List<BodyBuildingModel>> fetchData() async {
     bodyBuildingModel.clear();
     Uri url = Uri.parse(
-        '${ProjectManager.baseUrl}/${ApiQuery.exercises.name}/${ApiPath.biceps.queryPath}');
+        '${ProjectManager.baseUrl}/${ApiQuery.exercises.name}/${ApiPath.middleBack.queryPath}');
     var document = parse((await http.Client().get(url)).body);
 
     for (int i = 0;
