@@ -1,6 +1,6 @@
 # Flutter Html Parser
 
-With this project, we are pulling the data of a sample website with the web scraping method.
+With this project, we are pulling the data of a sample website with the [web scraping] method.
 
 ## Getting Started
 
