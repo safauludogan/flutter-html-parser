@@ -1,4 +1,4 @@
-# flutter_html_parser
+# Flutter Html Parser
 
 A new Flutter project.
 
