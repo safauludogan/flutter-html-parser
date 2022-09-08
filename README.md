@@ -1,6 +1,6 @@
-# flutter_html_parser
+# Flutter Html Parser
 
-A new Flutter project.
+With this project, we are pulling the data of a sample website with the [html parser](https://pub.dev/packages/flutter_html) method.
 
 ## Getting Started
 
@@ -14,3 +14,12 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+<img src="https://user-images.githubusercontent.com/57045839/188812438-28398f0d-045d-4acf-a0d7-1165cef96fc7.png" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="300" height="533" />
+
+<img src="https://user-images.githubusercontent.com/57045839/188812461-3034ae21-5b67-4c23-8cb2-58eb96e31818.png" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="300" height="533" />
+<img src="https://user-images.githubusercontent.com/57045839/188812635-f6e56df4-f2dd-4cb8-ad46-4321751d5367.png" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="300" height="533" />
+
+<img src="https://user-images.githubusercontent.com/57045839/188812478-99a9a219-7233-48a4-bbd6-10383609e139.png" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="300" height="533" />
+<img src="https://user-images.githubusercontent.com/57045839/188812484-2f4b7093-a38f-4fb7-98db-9b9c1011ab32.png" data-canonical-src="https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png" width="300" height="533" />
+
